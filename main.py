@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
+import json
 import requests
 #########################################################
 
@@ -39,7 +40,58 @@ async def read_root():
     "message": "Welcome to my Project by JONGHEON LEE"
    }
    
+@app.get("/getPlaceAll")
+async def getPlaceAll():
+    # 데이터베이스 연결 파라미터
+    params = {
+        "user": "default",
+        "password": "5kKDsz0UhSdn",
+        "host": "ep-withered-base-425049-pooler.eu-central-1.postgres.vercel-storage.com",
+        "port": "5432",
+        "database": "verceldb"
+    }
+
+    # 데이터베이스에 연결
+    conn = psycopg2.connect(**params)
+
+    # 커서 생성
+    cursor = conn.cursor()
+
+    # "Place" 테이블의 모든 데이터 조회
+    cursor.execute('SELECT * FROM "Place";')
+
+
+    row = ""
+    # 결과 출력
+    result_data = []
+    print("Place 테이블의 내용:")
+    for row in cursor:
+        result = {}
+        
+        result["id"] = row[0]
+        result["name"] =row[1]
+        result["movieId"] =row[2]
+        result["location"] =row[3]
+        result["latitude"] =str(row[4])
+        result["longitude"] =str(row[5])
+        result["contact"] =row[6]
+        result["link"] =row[7]
+        result["photo"] =row[8]
+        result_data.append(result)
+
+
+    # 커서와 연결 종료
+    cursor.close()
+    conn.close()
+
+    final_result = json.dumps(result_data, ensure_ascii=False)
+    return final_result
+
 @app.post("/test")
 async def TEST(item: test):
     params = dict(item)
     return params
+
+
+
+
