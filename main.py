@@ -18,6 +18,7 @@ origins = [
     "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:8080",
+    "https://port-0-tabi-fastapi-54ouz2lllql1pci.sel3.cloudtype.app/getPlaceAll"
 ]
 
 #위의 설정은 모든 origin, 모든 cookie, 모든 method, 모든 header를 allow한다.
